@@ -155,16 +155,15 @@ AtmFormPresenter >> post [
 
 { #category : 'account ops' }
 AtmFormPresenter >> transfer [
-	|dialog windowPresenter availableBalance jeTransfer|
+	|dialog windowPresenter jeTransfer|
 	dialog := application newPresenter: TransferPresenter.
 	windowPresenter := dialog openModal .
 	windowPresenter isOk ifFalse: [ ^ self ].
-	availableBalance := Accounts balanceFor: (application loggedInUser ).
 	jeTransfer := JournalEntry 
 		transfer: (dialog amount) 
 		from: (application loggedInUser) 
 		to: (dialog recipient)
-		usingAvailableBalanceOf: availableBalance .
+		usingAvailableBalanceOf: self balance .
 	Journal add: jeTransfer.
 	application class updatePresenters .
 ]
