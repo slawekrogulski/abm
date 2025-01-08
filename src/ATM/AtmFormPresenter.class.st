@@ -153,11 +153,6 @@ AtmFormPresenter >> post [
 	application class updatePresenters.
 ]
 
-{ #category : 'as yet unclassified' }
-AtmFormPresenter >> toolbarButtonLabel: label [ 
-	^self newLabel label: label; addStyle: 'toolbarButtonLabelStyle'; yourself.
-]
-
 { #category : 'account ops' }
 AtmFormPresenter >> transfer [
 	|dialog windowPresenter availableBalance jeTransfer|
