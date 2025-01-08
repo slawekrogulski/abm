@@ -102,10 +102,10 @@ JournalEntry >> dataAndTimeString [
 
 { #category : 'accessing' }
 JournalEntry >> date [
-	^('{1}-{2}-{3]' format: {
-		dateAndTime year . 
-		dateAndTime month . 
-		dateAndTime dayOfMonth })  
+	^$- join: (
+		{ #year .  #month . #dayOfMonth } 
+			collect: [ :m | (dateAndTime perform: m) zeroPadded ])
+
 ]
 
 { #category : 'accessing' }
@@ -167,10 +167,9 @@ JournalEntry >> retrieveAccountFrom: accounts [
 
 { #category : 'accessing' }
 JournalEntry >> time [
-	^('{1}-{2}-{3}' format: {
-		dateAndTime hours .
-		dateAndTime minutes .
-		dateAndTime seconds})  
+	^$- join: (
+		{ #hours .  #minutes . #seconds } 
+			collect: [ :m | (dateAndTime perform: m) zeroPadded ])
 ]
 
 { #category : 'accessing' }
