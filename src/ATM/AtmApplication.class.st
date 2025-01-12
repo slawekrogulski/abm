@@ -49,6 +49,12 @@ AtmApplication class >> updatePresenters [
 		presenter updatePresenter ]
 ]
 
+{ #category : 'operations' }
+AtmApplication >> deposit: amount [
+	Journal add: (JournalEntry credit: amount to: (self loggedInUser )).
+	self class updatePresenters
+]
+
 { #category : 'initialization' }
 AtmApplication >> initialize [ 
 	super initialize .
