@@ -78,7 +78,7 @@ AtmApplication >> loggedInUser: anObject [
 	loggedInUser := anObject
 ]
 
-{ #category : 'operations' }
+{ #category : 'account ops' }
 AtmApplication >> post [ 
 	Journal postFor: self loggedInUser .
 	self class updatePresenters.
@@ -118,4 +118,16 @@ AtmApplication >> styleSheet [
 			.toolbarButtonLabelStyle [ Font { #size: 22 } ]
 		]').
 	^ super styleSheet , style
+]
+
+{ #category : 'account ops' }
+AtmApplication >> transfer: amount to: other [
+	|jeTransfer|
+	jeTransfer := JournalEntry 
+		transfer: amount 
+		from: (self loggedInUser) 
+		to: other
+		usingAvailableBalanceOf: self balance .
+	Journal add: jeTransfer.
+	self class updatePresenters .
 ]
