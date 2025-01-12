@@ -49,7 +49,12 @@ AtmApplication class >> updatePresenters [
 		presenter updatePresenter ]
 ]
 
-{ #category : 'operations' }
+{ #category : 'account ops' }
+AtmApplication >> balance [ 
+	^Accounts balanceFor: (self loggedInUser) 
+]
+
+{ #category : 'account ops' }
 AtmApplication >> deposit: amount [
 	Journal add: (JournalEntry credit: amount to: (self loggedInUser )).
 	self class updatePresenters

@@ -16,7 +16,7 @@ Class {
 
 { #category : 'account ops' }
 AtmFormPresenter >> balance [
-	^Accounts balanceFor: (application loggedInUser) 
+	^application balance
 ]
 
 { #category : 'layout' }
