@@ -57,8 +57,7 @@ AtmFormPresenter >> deposit [
 	windowPresenter := dialog openModal .
 	windowPresenter isOk ifFalse: [ ^ self ].
 	application deposit: (dialog depositAmount). 
-"	Journal add: (JournalEntry credit: (dialog depositAmount) to: (application loggedInUser )).
-	AtmApplication updatePresenters ."
+
 ]
 
 { #category : 'initialization' }
@@ -149,8 +148,7 @@ AtmFormPresenter >> initializeWindow: aWindowPresenter [
 
 { #category : 'operations' }
 AtmFormPresenter >> post [ 
-	Journal postFor: application loggedInUser .
-	application class updatePresenters.
+	application post.
 ]
 
 { #category : 'account ops' }

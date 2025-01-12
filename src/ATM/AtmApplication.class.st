@@ -78,6 +78,12 @@ AtmApplication >> loggedInUser: anObject [
 	loggedInUser := anObject
 ]
 
+{ #category : 'operations' }
+AtmApplication >> post [ 
+	Journal postFor: self loggedInUser .
+	self class updatePresenters.
+]
+
 { #category : 'running' }
 AtmApplication >> run [ 
 	super run.
