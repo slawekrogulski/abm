@@ -22,11 +22,6 @@ DepositPresenter >> defaultLayout [
 ]
 
 { #category : 'as yet unclassified' }
-DepositPresenter >> deposit: anAmount [
-	Accounts deposit: anAmount to: (application loggedInUser ).
-]
-
-{ #category : 'as yet unclassified' }
 DepositPresenter >> depositAmount [
 	^amountInput number.
 ]

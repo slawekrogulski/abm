@@ -13,11 +13,6 @@ Accounts class >> accountNames [
 	^(accounts) keys.
 ]
 
-{ #category : 'adding' }
-Accounts class >> addCashAccountFor: userName [
-	(self cash) at: userName ifAbsentPut: Account new.
-]
-
 { #category : 'as yet unclassified' }
 Accounts class >> balanceFor: userName [
 	^((accounts at: userName) at: #cash) balance
@@ -87,13 +82,4 @@ Accounts class >> remove: accountName [
 Accounts class >> retrieve: accountName accountType: accountType [
 	(accountType = #cash) ifTrue: [ 
 		(accounts at: accountName) at: #cash ]
-]
-
-{ #category : 'as yet unclassified' }
-Accounts class >> transfer: anAmount from: sender to: recipient [ 
-	|senderAccount recipientAccount|
-	senderAccount := self cash at: sender.
-	recipientAccount:= self cash at: recipient .
-	senderAccount debit: anAmount .
-	recipientAccount credit: anAmount. 
 ]
