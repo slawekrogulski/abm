@@ -59,7 +59,7 @@ Accounts class >> list [
 	^accounts 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 Accounts class >> payableFor: owner [
 	^((accounts at: owner) at: #payable) associations 
 ]
@@ -73,7 +73,7 @@ Accounts class >> post: aJournalEntry [
 	
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 Accounts class >> receivableFor: owner [
 	^((accounts at: owner) at: #receivable) associations 
 ]

@@ -8,19 +8,23 @@ Class {
 	#package : 'ATM'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'account operations' }
 Account >> balance [
 	^balance
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'account operations' }
 Account >> credit: anAmount [
 	balance := balance + anAmount
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'account operations' }
 Account >> debit: anAmount [
-	balance := balance - anAmount
+	(balance >= anAmount)
+		ifTrue: [ 
+			balance := balance - anAmount.
+			^anAmount ]
+		ifFalse: [ ^0 ]
 ]
 
 { #category : 'initialization' }
