@@ -1,11 +1,15 @@
+"
+Deposit dialog
+"
 Class {
 	#name : 'DepositPresenter',
 	#superclass : 'SpPresenter',
 	#instVars : [
 		'amountInput'
 	],
-	#category : 'ATM',
-	#package : 'ATM'
+	#category : 'ATM-ui',
+	#package : 'ATM',
+	#tag : 'ui'
 }
 
 { #category : 'layout' }
@@ -34,7 +38,7 @@ DepositPresenter >> initializeDialogWindow: aDialogPresenter [
 		addButton: 'Deposit' do: [ :button | button beOk; close. ].
 ]
 
-{ #category : 'initialization' }
+{ #category : 'as yet unclassified' }
 DepositPresenter >> initializePresenters [ 
 	amountInput := self newNumberInput .
 ]

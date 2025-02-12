@@ -1,16 +1,21 @@
+"
+JOurnal Entry
+"
 Class {
 	#name : 'JournalEntry',
 	#superclass : 'Object',
 	#instVars : [
 		'id',
-		'accountName',
-		'transactionType',
-		'amount',
 		'dateAndTime',
-		'posted'
+		'drAccount',
+		'crAccount',
+		'amount',
+		'posted',
+		'note'
 	],
-	#category : 'ATM',
-	#package : 'ATM'
+	#category : 'ATM-accounts',
+	#package : 'ATM',
+	#tag : 'accounts'
 }
 
 { #category : 'operations' }
@@ -23,6 +28,15 @@ JournalEntry class >> credit: anAmount to: accountOwner [
 JournalEntry class >> debit: anAmount from: accountOwner [
 	^self operation: #debit amount: anAmount owner: accountOwner .
 
+]
+
+{ #category : 'creating classes' }
+JournalEntry class >> drAccount: aDrAccount crAccount: aCrAccount amount: anAmount note: aNote [
+	^self new dateAndTime: DateAndTime now;
+		drAccount: aDrAccount ;
+		crAccount: aCrAccount ;
+		amount: anAmount ;
+		note: aNote .
 ]
 
 { #category : 'operations' }
@@ -60,18 +74,6 @@ JournalEntry class >> transfer: transferAmount from: sender to: recipient usingA
 ]
 
 { #category : 'accessing' }
-JournalEntry >> accountName [
-
-	^ accountName
-]
-
-{ #category : 'accessing' }
-JournalEntry >> accountName: anObject [
-
-	accountName := anObject
-]
-
-{ #category : 'accessing' }
 JournalEntry >> accountType [
 
 	^ #cash
@@ -87,6 +89,18 @@ JournalEntry >> amount [
 JournalEntry >> amount: anObject [
 
 	amount := anObject
+]
+
+{ #category : 'accessing' }
+JournalEntry >> crAccount [
+
+	^ crAccount
+]
+
+{ #category : 'accessing' }
+JournalEntry >> crAccount: anObject [
+
+	crAccount := anObject
 ]
 
 { #category : 'as yet unclassified' }
@@ -121,6 +135,18 @@ JournalEntry >> dateAndTime: anObject [
 ]
 
 { #category : 'accessing' }
+JournalEntry >> drAccount [
+
+	^ drAccount
+]
+
+{ #category : 'accessing' }
+JournalEntry >> drAccount: anObject [
+
+	drAccount := anObject
+]
+
+{ #category : 'accessing' }
 JournalEntry >> id [
 	^id
 ]
@@ -138,20 +164,23 @@ JournalEntry >> initialize [
 ]
 
 { #category : 'accessing' }
-JournalEntry >> name [ 
-	^accountName 
+JournalEntry >> note [
+
+	^ note
 ]
 
 { #category : 'accessing' }
-JournalEntry >> owner [ 
-	^accountName 
+JournalEntry >> note: anObject [
+
+	note := anObject
 ]
 
 { #category : 'as yet unclassified' }
-JournalEntry >> postTo: account [
+JournalEntry >> post: ledger [
 
 	posted ifTrue: [ ^ self ].
-	account perform: (transactionType, ':') with: amount .
+	ledger debit: drAccount by: amount .
+	ledger credit: crAccount by: amount . 
 	posted := true
 ]
 
@@ -160,26 +189,9 @@ JournalEntry >> posted [
 	^posted ifTrue: [ 'Y' ] ifFalse: [ 'N' ]
 ]
 
-{ #category : 'as yet unclassified' }
-JournalEntry >> retrieveAccountFrom: accounts [
-	^(accounts for: accountName) at: (self accountType )
-]
-
 { #category : 'accessing' }
 JournalEntry >> time [
-	^$- join: (
+	^$: join: (
 		{ #hours .  #minutes . #seconds } 
 			collect: [ :m | (dateAndTime perform: m) zeroPadded ])
-]
-
-{ #category : 'accessing' }
-JournalEntry >> transactionType [
-
-	^ transactionType
-]
-
-{ #category : 'accessing' }
-JournalEntry >> transactionType: anObject [
-
-	transactionType := anObject
 ]

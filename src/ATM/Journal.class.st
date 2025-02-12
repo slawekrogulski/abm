@@ -1,12 +1,17 @@
+"
+Journal where journal entries are stored until there is a persistent disk based store.
+"
 Class {
 	#name : 'Journal',
 	#superclass : 'Object',
 	#classInstVars : [
 		'id',
-		'entries'
+		'entries',
+		'unposted'
 	],
-	#category : 'ATM',
-	#package : 'ATM'
+	#category : 'ATM-accounts',
+	#package : 'ATM',
+	#tag : 'accounts'
 }
 
 { #category : 'adding' }
@@ -19,18 +24,17 @@ Journal class >> add: aJournalEntry [
 
 { #category : 'adding' }
 Journal class >> addWithId: aJournalEntry [
-	entries add: (aJournalEntry id: id)
-]
-
-{ #category : 'accessing' }
-Journal class >> entriesFor: loggedInUser [
-	^(entries select: [ :e | e owner = loggedInUser ]) asArray
+	|je|
+	je := (aJournalEntry id: id).
+	entries add: je.
+	unposted add: je.
 ]
 
 { #category : 'class initialization' }
 Journal class >> initialize [ 
 	id := 0.
 	entries := OrderedCollection new.
+	unposted := OrderedCollection new.
 ]
 
 { #category : 'accessing' }
@@ -45,7 +49,14 @@ Journal class >> nextId [
 ]
 
 { #category : 'as yet unclassified' }
+Journal class >> post: ledger [
+	[ unposted isNotEmpty ] 
+		whileTrue: [ unposted removeFirst post: ledger ].
+"	entries do: [ :je | je post ]"
+]
+
+{ #category : 'as yet unclassified' }
 Journal class >> postFor: owner [
 	(entries select: [ :e | e owner = owner] ) do: [ :e | 
-		e postTo: (e retrieveAccountFrom: Accounts)  ]
+		e postTo: (e retrieveAccountFrom: UserAccounts)  ]
 ]

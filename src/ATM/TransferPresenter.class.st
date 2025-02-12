@@ -1,12 +1,16 @@
+"
+Transfer dialogue
+"
 Class {
 	#name : 'TransferPresenter',
 	#superclass : 'SpPresenter',
 	#instVars : [
 		'amountInput',
-		'recipientINput'
+		'recipientInput'
 	],
-	#category : 'ATM',
-	#package : 'ATM'
+	#category : 'ATM-ui',
+	#package : 'ATM',
+	#tag : 'ui'
 }
 
 { #category : 'accessing' }
@@ -21,7 +25,7 @@ TransferPresenter >> defaultLayout [
 		builder
 			column: 2 expand: false; 
 			add: 'Amount'; add: amountInput ; nextRow;
-			add: 'Recipient'; add: recipientINput.].
+			add: 'Recipient'; add: recipientInput.].
 	^SpBoxLayout newTopToBottom 
 		add: grid;
 		yourself. 
@@ -32,6 +36,7 @@ TransferPresenter >> defaultLayout [
 TransferPresenter >> initializeDialogWindow: aDialogPresenter [
 	aDialogPresenter 
 		title: 'Transfer';
+		initialExtent: 300@180;
 		addButton: 'Cancel' do: [ :button | button close ];
 		addButton: 'Transfer' do: [ :button | button beOk; close. ].
 ]
@@ -39,12 +44,17 @@ TransferPresenter >> initializeDialogWindow: aDialogPresenter [
 { #category : 'initialization' }
 TransferPresenter >> initializePresenters [ 
 	amountInput := self newNumberInput .
-	recipientINput := self newDropList 
-		help: 'select recipient';
-		items: ((Accounts accountNames) select: [:e | e ~= application loggedInUser ]).
+	recipientInput := self newDropList 
+		help: 'select recipient'";
+		items: ((Ledger users) select: [:e | e ~= application loggedInUser ])".
 ]
 
 { #category : 'accessing' }
 TransferPresenter >> recipient [
-	^recipientINput selectedItem
+	^recipientInput selectedItem
+]
+
+{ #category : 'accessing' }
+TransferPresenter >> recipients: recipeints [
+	recipientInput items: recipeints 
 ]

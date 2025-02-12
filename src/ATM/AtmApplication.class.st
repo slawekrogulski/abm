@@ -1,3 +1,18 @@
+"
+Atm Application class.
+Contains entry point
+To run in Playground
+```language=Pharo
+AtmApplication new start.
+```
+
+`AtmApplication>>#start`
+
+script for running tests
+```language=Pharo
+""code goes here""
+```
+"
 Class {
 	#name : 'AtmApplication',
 	#superclass : 'SpApplication',
@@ -7,8 +22,9 @@ Class {
 	#classInstVars : [
 		'presenters'
 	],
-	#category : 'ATM',
-	#package : 'ATM'
+	#category : 'ATM-application',
+	#package : 'ATM',
+	#tag : 'application'
 }
 
 { #category : 'adding' }
@@ -41,6 +57,11 @@ AtmApplication class >> removePresenterToUpdateFor: loggedInUser [
 	
 ]
 
+{ #category : 'accessing' }
+AtmApplication class >> start [
+	self new start
+]
+
 { #category : 'as yet unclassified' }
 AtmApplication class >> updatePresenters [ 
 	presenters keysAndValuesDo: [ 
@@ -49,21 +70,35 @@ AtmApplication class >> updatePresenters [
 		presenter updatePresenter ]
 ]
 
-{ #category : 'account ops' }
-AtmApplication >> balance [ 
-	^Accounts balanceFor: (self loggedInUser) 
+{ #category : 'accessing' }
+AtmApplication >> accounts [
+	^(Ledger accountsOf: (self loggedInUser)).
 ]
 
 { #category : 'account ops' }
-AtmApplication >> deposit: amount [
-	Journal add: (JournalEntry credit: amount to: (self loggedInUser )).
-	self class updatePresenters
+AtmApplication >> balance [ 
+	^Ledger balanceOf: (self loggedInUser)
+]
+
+{ #category : 'account ops' }
+AtmApplication >> deposit: amount to: owner [
+	|cashAccount bankAccount journalEntry|
+	bankAccount := CashAtBankAccountId ownedBy: owner.
+	cashAccount := CashOnHandAccountId ownedBy: owner.
+	journalEntry := JournalEntry drAccount: bankAccount crAccount: cashAccount amount: amount note: 'bank deposit'.
+	Journal add: journalEntry .
+	self updatePresenters
 ]
 
 { #category : 'initialization' }
 AtmApplication >> initialize [ 
 	super initialize .
 	"self styleSheet inspect."
+]
+
+{ #category : 'accessing' }
+AtmApplication >> journalEntries [
+	^Journal entriesFor: self loggedInUser.
 ]
 
 { #category : 'accessing' }
@@ -78,10 +113,41 @@ AtmApplication >> loggedInUser: anObject [
 	loggedInUser := anObject
 ]
 
+{ #category : 'opening' }
+AtmApplication >> openJournal [ 
+	(self new: JournalPresenter) open.
+]
+
+{ #category : 'opening' }
+AtmApplication >> openJournal: anOwner [
+	(JournalPresenter newApplication: self owner: anOwner) open. 
+	"(self new: JournalPresenter) open."
+]
+
+{ #category : 'opening' }
+AtmApplication >> openUserAccounts: userAccounts [ 
+	(UserAccountPresenter newApplication: self owner: self model: userAccounts) open .
+]
+
+{ #category : 'opening' }
+AtmApplication >> openUserAccounts: userAccounts owner: anOwner [
+	(UserAccountPresenter newApplication: self owner: anOwner model: userAccounts) open .
+]
+
+{ #category : 'accessing' }
+AtmApplication >> payables [ 
+	^self accounts payables.
+]
+
 { #category : 'account ops' }
 AtmApplication >> post [ 
-	Journal postFor: self loggedInUser .
-	self class updatePresenters.
+	Journal post: Ledger.
+	self updatePresenters.
+]
+
+{ #category : 'accessing' }
+AtmApplication >> receivables [ 
+	^self accounts receivables.
 ]
 
 { #category : 'running' }
@@ -93,7 +159,7 @@ AtmApplication >> run [
 AtmApplication >> start [
 	|presenter|
 	"^ ( self new: AtmMainPresenter  ) open".
-	presenter := self new: LoginPresenter.
+	presenter := self new: AtmApplicationPresenter .
 	"self class addPresenterToUpdate: presenter."
 	presenter open.
 ]
@@ -102,7 +168,7 @@ AtmApplication >> start [
 AtmApplication >> startMain [
 	|presenter|
 	"^ ( self new: AtmMainPresenter  ) open".
-	presenter := self new: AtmFormPresenter.
+	presenter := self new: UserAccountPresenter.
 	self class addPresenterToUpdate: presenter for: self loggedInUser .
 	presenter open.
 
@@ -121,6 +187,20 @@ AtmApplication >> styleSheet [
 ]
 
 { #category : 'account ops' }
+AtmApplication >> transfer: amount from: sender to: recipient [
+	|jeTransfer senderAccountId recipientAccountId|
+	senderAccountId := CashAtBankAccountId ownedBy: sender.
+	recipientAccountId := CashAtBankAccountId ownedBy: recipient.
+	jeTransfer := JournalEntry
+		drAccount: recipientAccountId 
+		crAccount: senderAccountId  
+		amount: amount 
+		note: ('transfer from {1} ro {2}' format: {sender . recipient }). 
+	Journal add: jeTransfer.
+	self updatePresenters .
+]
+
+{ #category : 'account ops' }
 AtmApplication >> transfer: amount to: other [
 	|jeTransfer|
 	jeTransfer := JournalEntry 
@@ -130,4 +210,9 @@ AtmApplication >> transfer: amount to: other [
 		usingAvailableBalanceOf: self balance .
 	Journal add: jeTransfer.
 	self class updatePresenters .
+]
+
+{ #category : 'as yet unclassified' }
+AtmApplication >> updatePresenters [ 
+	self windows do: [ :window | window presenter updatePresenter ]
 ]
