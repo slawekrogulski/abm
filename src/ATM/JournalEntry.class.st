@@ -18,18 +18,6 @@ Class {
 	#tag : 'accounts'
 }
 
-{ #category : 'operations' }
-JournalEntry class >> credit: anAmount to: accountOwner [
-	^self operation: #credit amount: anAmount owner: accountOwner .
-
-]
-
-{ #category : 'operations' }
-JournalEntry class >> debit: anAmount from: accountOwner [
-	^self operation: #debit amount: anAmount owner: accountOwner .
-
-]
-
 { #category : 'creating classes' }
 JournalEntry class >> drAccount: aDrAccount crAccount: aCrAccount amount: anAmount note: aNote [
 	^self new dateAndTime: DateAndTime now;
@@ -37,40 +25,6 @@ JournalEntry class >> drAccount: aDrAccount crAccount: aCrAccount amount: anAmou
 		crAccount: aCrAccount ;
 		amount: anAmount ;
 		note: aNote .
-]
-
-{ #category : 'operations' }
-JournalEntry class >> operation: op amount: anAmount owner: accountOwner [
-	^self new
-		accountName: accountOwner ;
-		amount: anAmount ;
-		dateAndTime: DateAndTime now;
-		transactionType: op.
-]
-
-{ #category : 'operations' }
-JournalEntry class >> transfer: anAmount from: sender to: recipient [
-	^{
-		self debit: anAmount from: sender .
-		self credit: anAmount to: recipient 
-	}
-]
-
-{ #category : 'operations' }
-JournalEntry class >> transfer: transferAmount from: sender to: recipient usingAvailableBalanceOf: availableBalance [
-	(availableBalance >= transferAmount)
-		ifTrue: [^{
-			self debit: transferAmount from: sender .
-			self credit: transferAmount to: recipient }].
-	((availableBalance > 0) and: [availableBalance < transferAmount ])	ifTrue: [ ^{ 
-			self debit: availableBalance from: sender .
-			JournalEntryPayable credit: (transferAmount - availableBalance ) to: (sender,'|',recipient). 
-			JournalEntryReceivable credit: (transferAmount - availableBalance) to: (recipient,'|',sender) .
-			self credit: availableBalance to: recipient } ].
-	^{
-		JournalEntryPayable credit: (transferAmount - availableBalance ) to: (sender,'|',recipient). 
-		JournalEntryReceivable credit: (transferAmount - availableBalance) to: (recipient,'|',sender) .
-	}
 ]
 
 { #category : 'accessing' }

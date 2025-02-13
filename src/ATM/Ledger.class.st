@@ -5,7 +5,9 @@ Class {
 	#name : 'Ledger',
 	#superclass : 'Object',
 	#classInstVars : [
-		'userAccounts'
+		'userAccounts',
+		'prodUserAccounts',
+		'underTest'
 	],
 	#category : 'ATM-accounts',
 	#package : 'ATM',
@@ -28,17 +30,17 @@ Ledger class >> add: accounts [
 	
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'account operations' }
 Ledger class >> balanceOf: owner [
 	^(self accountsOf: owner) balance
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'account operations' }
 Ledger class >> credit: accountId by: anAmount [
 	(accountId from: self) credit: anAmount 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'account operations' }
 Ledger class >> debit: accountId by: anAmount [
 	(accountId from: self) debit: anAmount
 ]
