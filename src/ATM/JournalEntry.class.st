@@ -28,12 +28,6 @@ JournalEntry class >> drAccount: aDrAccount crAccount: aCrAccount amount: anAmou
 ]
 
 { #category : 'accessing' }
-JournalEntry >> accountType [
-
-	^ #cash
-]
-
-{ #category : 'accessing' }
 JournalEntry >> amount [
 
 	^ amount
@@ -55,17 +49,6 @@ JournalEntry >> crAccount [
 JournalEntry >> crAccount: anObject [
 
 	crAccount := anObject
-]
-
-{ #category : 'as yet unclassified' }
-JournalEntry >> dataAndTimeString [
-	^('{1}-{2}-{3] {4}:{5}:{6}' format: {
-		dateAndTime year . 
-		dateAndTime month . 
-		dateAndTime dayOfMonth .
-		dateAndTime hours .
-		dateAndTime minutes .
-		dateAndTime seconds})  
 ]
 
 { #category : 'accessing' }
@@ -129,7 +112,7 @@ JournalEntry >> note: anObject [
 	note := anObject
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'posting' }
 JournalEntry >> post: ledger [
 
 	posted ifTrue: [ ^ self ].
@@ -138,9 +121,9 @@ JournalEntry >> post: ledger [
 	posted := true
 ]
 
-{ #category : 'accessing' }
+{ #category : 'posting' }
 JournalEntry >> posted [ 
-	^posted ifTrue: [ 'Y' ] ifFalse: [ 'N' ]
+	^posted
 ]
 
 { #category : 'accessing' }

@@ -34,6 +34,7 @@ DepositPresenter >> depositAmount [
 DepositPresenter >> initializeDialogWindow: aDialogPresenter [
 	aDialogPresenter 
 		title: 'Deposit';
+		initialExtent: 300@150;
 		addButton: 'Cancel' do: [ :button | button close ];
 		addButton: 'Deposit' do: [ :button | button beOk; close. ].
 ]

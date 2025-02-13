@@ -12,6 +12,37 @@ Class {
 	#tag : 'ui'
 }
 
+{ #category : 'column creation' }
+JournalPresenter >> column: title eval: evalBlock [
+	^SpStringTableColumn new 
+		title: title;
+		evaluated: evalBlock.
+]
+
+{ #category : 'column creation' }
+JournalPresenter >> column: title eval: evalBlock align: align [
+	^(self column: title eval: evalBlock)
+		displayAlignment: [SpColumnAlignment perform: align].
+]
+
+{ #category : 'column creation' }
+JournalPresenter >> column: title eval: evalBlock align: align width: width [
+	^(self column: title eval: evalBlock align: align) width: width.
+"	^SpStringTableColumn new 
+		title: title;
+		evaluated: evalBlock;
+		displayAlignment: [SpColumnAlignment perform: align] ;
+		width: width."
+]
+
+{ #category : 'column creation' }
+JournalPresenter >> column: title eval: evalBlock width: width [
+	^SpStringTableColumn new 
+		title: title;
+		evaluated: evalBlock;
+		width: width .
+]
+
 { #category : 'layout' }
 JournalPresenter >> defaultLayout [ 
 ^SpBoxLayout newTopToBottom 
@@ -23,21 +54,19 @@ JournalPresenter >> defaultLayout [
 { #category : 'initialization' }
 JournalPresenter >> initializePresenters [
 	|right center|
-	right := [:je | SpColumnAlignment right].
-	center := [:je | SpColumnAlignment center ].
+	right := [SpColumnAlignment right].
+	center := [SpColumnAlignment center ].
 	journalEntries := self newTable 
 		propagateNaturalWidth: true ;
 		propagateNaturalHeight: true .
 	{
-	SpStringTableColumn new title: 'Id'        ; evaluated: #id; displayAlignment: right; width: 20.
-	"SpStringTableColumn new title: 'Name'     ; evaluated: [ :je | je name ]."
-	SpStringTableColumn new title: 'Date'      ; evaluated: #date; displayAlignment: right; width: 80.
-	SpStringTableColumn new title: 'Time'      ; evaluated: #time; width: 80.
-	SpStringTableColumn new title: 'Dr Account'; evaluated: [ :je | je drAccount name ] .
-	SpStringTableColumn new title: 'Cr Account'; evaluated: [ :je | je crAccount name ] .
-	"SpStringTableColumn new title: 'Operation'; evaluated: #transactionType ."
-	SpStringTableColumn new title: 'Amount'    ; evaluated: #amount; displayAlignment: right; width: 100.
-	SpStringTableColumn new title: 'Posted'    ; evaluated: #posted; displayAlignment: center; width: 70
+	self column: 'Id'         eval: #id                                                 align: #right  width: 20.
+	self column: 'Date'       eval: #date                                               align: #right  width: 80.
+	self column: 'Time'       eval: #time                                                              width: 80. 
+	self column: 'Dr Account' eval: [ :je | je drAccount name ] .
+	self column: 'Cr Account' eval: [ :je | je crAccount name ] .
+	self column: 'Amount'     eval: [ :je | je amount asStringWithCommas ]              align: #right  width: 100. 
+	self column: 'Posted'     eval: [ :je | je posted ifTrue: [ 'Y' ] ifFalse: [ 'N' ]] align: #center width: 70
 	} do: [ :column | journalEntries addColumn: column ].
 ]
 

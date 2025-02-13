@@ -12,11 +12,6 @@ Class {
 	#tag : 'accounts'
 }
 
-{ #category : 'instance creation' }
-AccountId class >> from: userAccounts [
-	self subclassResponsibility 
-]
-
 { #category : 'testing' }
 AccountId class >> isAbstract [
 
@@ -38,6 +33,11 @@ AccountId >> from: ledger [
 { #category : 'accessing' }
 AccountId >> name [
 	^owner, '-', (self type)
+]
+
+{ #category : 'accessing' }
+AccountId >> owner [
+	^owner
 ]
 
 { #category : 'accessing' }

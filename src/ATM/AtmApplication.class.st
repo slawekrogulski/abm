@@ -195,24 +195,12 @@ AtmApplication >> transfer: amount from: sender to: recipient [
 		drAccount: recipientAccountId 
 		crAccount: senderAccountId  
 		amount: amount 
-		note: ('transfer from {1} ro {2}' format: {sender . recipient }). 
+		note: ('transfer {1} from {2} to {3}' format: {amount . sender . recipient }). 
 	Journal add: jeTransfer.
 	self updatePresenters .
 ]
 
-{ #category : 'account ops' }
-AtmApplication >> transfer: amount to: other [
-	|jeTransfer|
-	jeTransfer := JournalEntry 
-		transfer: amount 
-		from: (self loggedInUser) 
-		to: other
-		usingAvailableBalanceOf: self balance .
-	Journal add: jeTransfer.
-	self class updatePresenters .
-]
-
-{ #category : 'as yet unclassified' }
+{ #category : 'ui' }
 AtmApplication >> updatePresenters [ 
 	self windows do: [ :window | window presenter updatePresenter ]
 ]
