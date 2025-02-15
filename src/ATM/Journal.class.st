@@ -34,6 +34,11 @@ Journal class >> addWithId: aJournalEntry [
 	unposted add: je.
 ]
 
+{ #category : 'accessing' }
+Journal class >> count [
+	^ entries size
+]
+
 { #category : 'class initialization' }
 Journal class >> initialize [
 	prodId := 0. 
