@@ -17,7 +17,8 @@ Class {
 	#name : 'AtmApplication',
 	#superclass : 'SpApplication',
 	#instVars : [
-		'loggedInUser'
+		'journal',
+		'journalEntryClass'
 	],
 	#classInstVars : [
 		'presenters'
@@ -70,16 +71,6 @@ AtmApplication class >> updatePresenters [
 		presenter updatePresenter ]
 ]
 
-{ #category : 'accessing' }
-AtmApplication >> accounts [
-	^(Ledger accountsOf: (self loggedInUser)).
-]
-
-{ #category : 'account ops' }
-AtmApplication >> balance [ 
-	^Ledger balanceOf: (self loggedInUser)
-]
-
 { #category : 'account ops' }
 AtmApplication >> deposit: amount to: owner [
 	|cashAccount bankAccount journalEntry|
@@ -88,29 +79,6 @@ AtmApplication >> deposit: amount to: owner [
 	journalEntry := JournalEntry drAccount: bankAccount crAccount: cashAccount amount: amount note: 'bank deposit'.
 	Journal add: journalEntry .
 	self updatePresenters
-]
-
-{ #category : 'initialization' }
-AtmApplication >> initialize [ 
-	super initialize .
-	"self styleSheet inspect."
-]
-
-{ #category : 'accessing' }
-AtmApplication >> journalEntries [
-	^Journal entriesFor: self loggedInUser.
-]
-
-{ #category : 'accessing' }
-AtmApplication >> loggedInUser [
-
-	^ loggedInUser
-]
-
-{ #category : 'accessing' }
-AtmApplication >> loggedInUser: anObject [
-
-	loggedInUser := anObject
 ]
 
 { #category : 'opening' }
@@ -134,20 +102,10 @@ AtmApplication >> openUserAccounts: userAccounts owner: anOwner [
 	(UserAccountPresenter newApplication: self owner: anOwner model: userAccounts) open .
 ]
 
-{ #category : 'accessing' }
-AtmApplication >> payables [ 
-	^self accounts payables.
-]
-
 { #category : 'account ops' }
 AtmApplication >> post [ 
 	Journal post: Ledger.
 	self updatePresenters.
-]
-
-{ #category : 'accessing' }
-AtmApplication >> receivables [ 
-	^self accounts receivables.
 ]
 
 { #category : 'running' }
@@ -162,16 +120,6 @@ AtmApplication >> start [
 	presenter := self new: AtmApplicationPresenter .
 	"self class addPresenterToUpdate: presenter."
 	presenter open.
-]
-
-{ #category : 'accessing' }
-AtmApplication >> startMain [
-	|presenter|
-	"^ ( self new: AtmMainPresenter  ) open".
-	presenter := self new: UserAccountPresenter.
-	self class addPresenterToUpdate: presenter for: self loggedInUser .
-	presenter open.
-
 ]
 
 { #category : 'styling' }
