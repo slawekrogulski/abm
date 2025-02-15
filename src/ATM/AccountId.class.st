@@ -20,7 +20,7 @@ AccountId class >> isAbstract [
 
 { #category : 'creating classes' }
 AccountId class >> ownedBy: owner [
-	self subclassResponsibility 
+	^self new owner: owner
 ]
 
 { #category : 'accessing' }

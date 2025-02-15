@@ -9,11 +9,6 @@ Class {
 	#tag : 'accounts'
 }
 
-{ #category : 'creating classes' }
-CashAtBankAccountId class >> ownedBy: owner [
-	^self new owner: owner.
-]
-
 { #category : 'accessing' }
 CashAtBankAccountId >> thisAccount: userAccounts [
 	^userAccounts cashAtBank.
