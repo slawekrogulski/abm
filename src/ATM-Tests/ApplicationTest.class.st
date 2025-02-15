@@ -4,26 +4,22 @@ Class {
 	#instVars : [
 		'application',
 		'userA',
-		'userB'
+		'userB',
+		'journal'
 	],
 	#category : 'ATM-Tests',
 	#package : 'ATM-Tests'
 }
 
-{ #category : 'as yet unclassified' }
-ApplicationTest >> journalEntryAccount: aAccountId isOwnedBy: anOwner isOfType: aType [
-	self assert: aAccountId owner equals: anOwner .
-	self assert: aAccountId type  equals: aType.
-]
-
 { #category : 'running' }
 ApplicationTest >> setUp [
 	super setUp.
-	application := AtmApplication new.
+	journal := JournalUT tester: self.
+	application := AtmApplication new journal: journal; journalEntryClass: JournalEntryUT; yourself .
 	Ledger testStart.
-	Journal testStart .
-	userA := UserAccounts newFor: 'a'.
-	userB := UserAccounts newFor: 'b'.
+	journal testStart .
+	userA := (UserAccountsUT newFor: 'a') tester: self.
+	userB := (UserAccountsUT newFor: 'b') tester: self.
 	Ledger add: userA .
 	Ledger add: userB .
 ]
@@ -31,56 +27,68 @@ ApplicationTest >> setUp [
 { #category : 'running' }
 ApplicationTest >> tearDown [ 
 	Ledger testStop.
-	Journal testStop.
+	journal testStop.
 	super tearDown .
 
 ]
 
 { #category : 'tests' }
 ApplicationTest >> testDeposit [
-	|journalEntry|
+
 	application deposit: 1 to: 'a'.
-	self assert: userA balance equals: 1000000.
-	self assert: userA cashAtBank balance equals: 0.
-	self assert: userA cashOnHand balance equals: 1000000.
-	self assert: Journal list size equals: 1.
-	journalEntry := Journal list first.
-	self assert: journalEntry id equals: 1.
-	self deny: journalEntry posted.
-	self assert: journalEntry amount equals: 1.
-	self journalEntryAccount: journalEntry drAccount isOwnedBy: 'a' isOfType: 'Cash_At_Bank'.
-	self journalEntryAccount: journalEntry crAccount isOwnedBy: 'a' isOfType: 'Cash_On_Hand'.
-	application post.	
-	self assert: journalEntry posted.
-	self assert: userA balance equals: 1000000.
-	self assert: userA cashAtBank balance equals: 1.
-	self assert: userA cashOnHand balance equals: 999999.
+	userA balance: 1000000 cashOnHand: 1000000 cashAtBank: 0.
+	journal entryCountIs: 1.
+	journal nonePosted .
+	
+	journal first id: 1 amount: 1 note: 'bank deposit' 
+		drAccType: 'Cash_At_Bank' drAccOwner: 'a' 
+		crAccType: 'Cash_On_Hand' crAccOwner: 'a'.
+	
+	application post.
+	journal allPosted.
+	userA balance: 1000000 cashOnHand: 999999 cashAtBank: 1.
 
 ]
 
 { #category : 'tests' }
 ApplicationTest >> testTransfer [
-	|journalEntry|
+
 	application deposit: 1 to: 'a'.
 	application transfer: 1 from: 'a' to: 'b'.
-	self assert: Journal list size equals: 2.
-	self deny: Journal list first posted.
-	self deny: Journal list second posted.
-	journalEntry := Journal list second.
-	self assert: journalEntry id equals: 2.
-	self deny: journalEntry posted.
-	self assert: journalEntry amount equals: 1.
-	self assert: journalEntry note equals: 'transfer 1 from a to b'.
-	self journalEntryAccount: journalEntry drAccount isOwnedBy: 'b' isOfType: 'Cash_At_Bank'.
-	self journalEntryAccount: journalEntry crAccount isOwnedBy: 'a' isOfType: 'Cash_At_Bank'.
+
+	journal entryCountIs: 2.
+	journal nonePosted.
+
+	journal second id: 2 amount: 1 note: 'transfer 1 from a to b'
+		drAccType: 'Cash_At_Bank' drAccOwner: 'b' 
+		crAccType: 'Cash_At_Bank' crAccOwner: 'a'.
+
 	application post.
-	self assert: Journal list first posted.
-	self assert: Journal list second posted.
-	self assert: userA balance            equals:  999999.
-	self assert: userA cashOnHand balance equals:  999999.
-	self assert: userA cashAtBank balance equals:       0.
-	self assert: userB balance    equals:         1000001.
-	self assert: userB cashOnHand balance equals: 1000000.
-	self assert: userB cashAtBank balance equals:       1.
+	journal allPosted.
+	userA balance:  999999 cashOnHand:  999999 cashAtBank: 0.
+	userB balance: 1000001 cashOnHand: 1000000 cashAtBank: 1.
+
+]
+
+{ #category : 'tests' }
+ApplicationTest >> testTransferNoFunds [
+
+	| journalEntry |
+	userA transfer: 1 to: 'b' via: application .
+
+	self assert: journal count equals: 1.
+	journalEntry := journal first.
+	journal nonePosted.
+	journal first id: 1 amount: 1 note: 'transfer_later 1 from a to b'
+		drAccType: 'Receivable_from_a' drAccOwner: 'b'
+		crAccType: 'Payable_to_b'      crAccOwner: 'a'.
+
+	application post.
+	journal allPosted .
+	userA balance: 1000000 cashOnHand: 1000000 cashAtBank: 0.
+	userB balance: 1000000 cashOnHand: 1000000 cashAtBank: 0.
+	
+	userA payable:    1 to:   'b'.
+	userB receivable: 1 from: 'a'.
 
 ]
