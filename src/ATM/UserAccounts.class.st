@@ -65,18 +65,8 @@ UserAccounts >> owner: anOwner [
 ]
 
 { #category : 'accessing' }
-UserAccounts >> payable [ 
-	^payable values inject: 0 into: [ :acc :each | acc + each ]
-]
-
-{ #category : 'accessing' }
 UserAccounts >> payables [
 	^payable
-]
-
-{ #category : 'accessing' }
-UserAccounts >> receivable [ 
-	^receivable values inject: 0 into: [ :acc :each | acc + each ]
 ]
 
 { #category : 'accessing' }
