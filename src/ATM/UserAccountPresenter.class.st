@@ -133,7 +133,8 @@ UserAccountPresenter >> transfer [
 	dialog recipients: recipients.
 	windowPresenter := dialog openModal .
 	windowPresenter isOk ifFalse: [ ^ self ].
-	application transfer: (dialog amount) from: (userAccounts owner) to: (dialog recipient).
+	userAccounts transfer: (dialog amount) to: (dialog recipient) via: application .
+	"application transfer: (dialog amount) from: (userAccounts owner) to: (dialog recipient)."
 
 ]
 

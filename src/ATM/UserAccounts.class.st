@@ -73,3 +73,12 @@ UserAccounts >> payables [
 UserAccounts >> receivables [
 	^receivable
 ]
+
+{ #category : 'account ops' }
+UserAccounts >> transfer: anAmount to: recipient via: application [
+	(cashAtBank balance >= anAmount)
+		ifTrue: [ application transfer: anAmount from: owner to: recipient ].
+	(cashAtBank balance = 0)
+		ifTrue: [ application transferLater: anAmount from: owner to: recipient ] .
+	
+]
