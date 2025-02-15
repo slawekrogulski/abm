@@ -12,6 +12,11 @@ Class {
 	#tag : 'accounts'
 }
 
+{ #category : 'creating classes' }
+ReceivbleAccount class >> ownedBy: anOwner receivableFrom: aPayer [
+	^(self ownedBy: anOwner) payer: aPayer 
+]
+
 { #category : 'accessing' }
 ReceivbleAccount >> payer [
 
