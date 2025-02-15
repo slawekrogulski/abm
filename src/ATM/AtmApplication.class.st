@@ -76,9 +76,21 @@ AtmApplication >> deposit: amount to: owner [
 	|cashAccount bankAccount journalEntry|
 	bankAccount := CashAtBankAccountId ownedBy: owner.
 	cashAccount := CashOnHandAccountId ownedBy: owner.
-	journalEntry := JournalEntry drAccount: bankAccount crAccount: cashAccount amount: amount note: 'bank deposit'.
-	Journal add: journalEntry .
+	journalEntry := journalEntryClass drAccount: bankAccount crAccount: cashAccount amount: amount note: 'bank deposit'.
+	journal add: journalEntry .
 	self updatePresenters
+]
+
+{ #category : 'accessing' }
+AtmApplication >> journal: aJournal [
+
+	journal := aJournal
+]
+
+{ #category : 'accessing' }
+AtmApplication >> journalEntryClass: aJournalEntryClass [
+
+	journalEntryClass := aJournalEntryClass
 ]
 
 { #category : 'opening' }
@@ -104,7 +116,7 @@ AtmApplication >> openUserAccounts: userAccounts owner: anOwner [
 
 { #category : 'account ops' }
 AtmApplication >> post [ 
-	Journal post: Ledger.
+	journal post: Ledger.
 	self updatePresenters.
 ]
 
@@ -136,15 +148,25 @@ AtmApplication >> styleSheet [
 
 { #category : 'account ops' }
 AtmApplication >> transfer: amount from: sender to: recipient [
-	|jeTransfer senderAccountId recipientAccountId|
-	senderAccountId := CashAtBankAccountId ownedBy: sender.
-	recipientAccountId := CashAtBankAccountId ownedBy: recipient.
-	jeTransfer := JournalEntry
-		drAccount: recipientAccountId 
-		crAccount: senderAccountId  
+	|jeTransfer|
+	jeTransfer := journalEntryClass 
+		drAccount: (CashAtBankAccountId ownedBy: recipient) 
+		crAccount: (CashAtBankAccountId ownedBy: sender)  
 		amount: amount 
 		note: ('transfer {1} from {2} to {3}' format: {amount . sender . recipient }). 
-	Journal add: jeTransfer.
+	journal add: jeTransfer.
+	self updatePresenters .
+]
+
+{ #category : 'account ops' }
+AtmApplication >> transferLater: amount from: sender to: recipient [
+	|jeTransfer|
+	jeTransfer := journalEntryClass 
+		drAccount: (ReceivableAccountId ownedBy: recipient receivableFrom: sender)
+		crAccount: (PayableAccountId    ownedBy: sender    payableTo:      recipient)
+		amount: amount 
+		note: ('transfer_later {1} from {2} to {3}' format: {amount . sender . recipient}). 
+	journal add: jeTransfer.
 	self updatePresenters .
 ]
 
