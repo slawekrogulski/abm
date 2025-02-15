@@ -65,8 +65,28 @@ UserAccounts >> owner: anOwner [
 ]
 
 { #category : 'accessing' }
+UserAccounts >> payableBalance [
+	^payable values inject: 0 into: [ :acc :each | acc + each balance ]
+]
+
+{ #category : 'accessing' }
+UserAccounts >> payableTo: payee [
+	^payable at: payee ifAbsentPut: [ PayableAccount ownedBy: owner payableTo: payee]
+]
+
+{ #category : 'accessing' }
 UserAccounts >> payables [
 	^payable
+]
+
+{ #category : 'accessing' }
+UserAccounts >> receivableBalance [
+	^receivable values inject: 0 into: [ :acc :each | acc + each balance]
+]
+
+{ #category : 'accessing' }
+UserAccounts >> receivableFrom: payer [
+	^receivable at: payer ifAbsentPut: [ ReceivbleAccount ownedBy: owner receivableFrom: payer ]
 ]
 
 { #category : 'accessing' }
