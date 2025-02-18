@@ -45,6 +45,11 @@ UserAccounts >> cashOnHand [
 	^cashOnHand 
 ]
 
+{ #category : 'account ops' }
+UserAccounts >> deposit: anAmount via: application [
+	application deposit: anAmount to: owner
+]
+
 { #category : 'initialization' }
 UserAccounts >> initialize [ 
 	cashAtBank := CashAtBank ownedBy: owner.
