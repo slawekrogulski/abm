@@ -81,6 +81,13 @@ AtmApplication >> deposit: amount to: owner [
 	self updatePresenters
 ]
 
+{ #category : 'initialization' }
+AtmApplication >> initialize [ 
+	super initialize.
+	journal := Journal.
+	journalEntryClass := JournalEntry .
+]
+
 { #category : 'accessing' }
 AtmApplication >> journal: aJournal [
 
