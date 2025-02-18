@@ -66,7 +66,8 @@ JournalPresenter >> initializePresenters [
 	self column: 'Dr Account' eval: [ :je | je drAccount name ] .
 	self column: 'Cr Account' eval: [ :je | je crAccount name ] .
 	self column: 'Amount'     eval: [ :je | je amount asStringWithCommas ]              align: #right  width: 100. 
-	self column: 'Posted'     eval: [ :je | je posted ifTrue: [ 'Y' ] ifFalse: [ 'N' ]] align: #center width: 70
+	self column: 'Posted'     eval: [ :je | je posted ifTrue: [ 'Y' ] ifFalse: [ 'N' ]] align: #center width: 70.
+	self column: 'Notes'      eval: #note 
 	} do: [ :column | journalEntries addColumn: column ].
 ]
 
@@ -100,7 +101,7 @@ JournalPresenter >> initializeWindow: aWindowPresenter [
 		title: 'Journal';
 		toolbar: toolbar;
 		statusBar: (self newLabel label: 'status');
-		initialExtent: 800@400 .
+		initialExtent: 900@400 .
 
 ]
 
