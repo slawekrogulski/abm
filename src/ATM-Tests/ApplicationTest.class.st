@@ -73,11 +73,9 @@ ApplicationTest >> testTransfer [
 { #category : 'tests' }
 ApplicationTest >> testTransferNoFunds [
 
-	| journalEntry |
 	userA transfer: 1 to: 'b' via: application .
 
 	self assert: journal count equals: 1.
-	journalEntry := journal first.
 	journal nonePosted.
 	journal first id: 1 amount: 1 note: 'transfer_later 1 from a to b'
 		drAccType: 'Receivable_from_a' drAccOwner: 'b'
