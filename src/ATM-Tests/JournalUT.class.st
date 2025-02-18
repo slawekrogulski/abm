@@ -35,7 +35,19 @@ JournalUT class >> nonePosted [
 	entries do: [ :e | tester deny: e posted ].
 ]
 
+{ #category : 'verification' }
+JournalUT class >> nonePostedAfter: anId [
+	entries do: [ :e |
+		(e id > anId)
+			ifTrue: [ tester deny: e posted ]  ].
+]
+
 { #category : 'accessing' }
 JournalUT class >> second [
 	^ entries second
+]
+
+{ #category : 'accessing' }
+JournalUT class >> third [
+	^ entries third
 ]

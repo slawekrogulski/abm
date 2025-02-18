@@ -101,9 +101,13 @@ UserAccounts >> receivables [
 
 { #category : 'account ops' }
 UserAccounts >> transfer: anAmount to: recipient via: application [
-	(cashAtBank balance >= anAmount)
-		ifTrue: [ application transfer: anAmount from: owner to: recipient ].
-	(cashAtBank balance = 0)
-		ifTrue: [ application transferLater: anAmount from: owner to: recipient ] .
-	
+	| available |
+	available := cashAtBank balance.
+	available >= anAmount ifTrue: [
+		application transfer: anAmount from: owner to: recipient ].
+	available = 0 ifTrue: [
+		application transferLater: anAmount from: owner to: recipient ].
+	(available > 0 and: [ available < anAmount ]) ifTrue: [
+		application transfer: available from: owner to: recipient.
+		application transferLater: anAmount - available from: owner to: recipient ].
 ]
