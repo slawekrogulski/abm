@@ -35,7 +35,7 @@ ApplicationTest >> tearDown [
 { #category : 'tests' }
 ApplicationTest >> testDeposit [
 
-	application deposit: 1 to: 'a'.
+	userA deposit: 1 via: application .
 	userA balance: 1000000 cashOnHand: 1000000 cashAtBank: 0.
 	journal entryCountIs: 1.
 	journal nonePosted .
