@@ -5,9 +5,7 @@ Class {
 	#name : 'Ledger',
 	#superclass : 'Object',
 	#classInstVars : [
-		'userAccounts',
-		'prodUserAccounts',
-		'underTest'
+		'userAccounts'
 	],
 	#category : 'ATM-accounts',
 	#package : 'ATM',
@@ -52,9 +50,8 @@ Ledger class >> exists: owner [
 
 { #category : 'class initialization' }
 Ledger class >> initialize [
-	prodUserAccounts :=  Dictionary new.
-	underTest := false.
-	userAccounts := prodUserAccounts .
+	"Transcript show: 'Ledger initialize';cr."
+	userAccounts :=  Dictionary new.
 
 ]
 
@@ -69,21 +66,4 @@ Ledger class >> remove: owner [
 	"	ifNotNil: [ 'removed all accounts for: ', owner ] 
 		ifNil: [ owner,' does not have any accounts' ]
 "
-]
-
-{ #category : 'testing' }
-Ledger class >> testInProgress [
-	^underTest.
-]
-
-{ #category : 'testing' }
-Ledger class >> testStart [
-	underTest := true.
-	userAccounts := Dictionary new .
-]
-
-{ #category : 'testing' }
-Ledger class >> testStop [
-	underTest := false.
-	userAccounts := prodUserAccounts .
 ]

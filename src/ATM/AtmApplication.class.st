@@ -18,7 +18,8 @@ Class {
 	#superclass : 'SpApplication',
 	#instVars : [
 		'journal',
-		'journalEntryClass'
+		'journalEntryClass',
+		'ledger'
 	],
 	#classInstVars : [
 		'presenters'
@@ -86,6 +87,7 @@ AtmApplication >> initialize [
 	super initialize.
 	journal := Journal.
 	journalEntryClass := JournalEntry .
+	ledger := Ledger.
 ]
 
 { #category : 'accessing' }
@@ -123,7 +125,7 @@ AtmApplication >> openUserAccounts: userAccounts owner: anOwner [
 
 { #category : 'account ops' }
 AtmApplication >> post [ 
-	journal post: Ledger.
+	journal post: ledger.
 	self updatePresenters.
 ]
 

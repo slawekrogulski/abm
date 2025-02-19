@@ -5,9 +5,9 @@ Class {
 	#name : 'JournalEntryUT',
 	#superclass : 'JournalEntry',
 	#traits : 'Tester',
-	#classTraits : 'Tester classTrait',
-	#category : 'ATM-Tests',
-	#package : 'ATM-Tests'
+	#category : 'ATM-Tests-UT extensions',
+	#package : 'ATM-Tests',
+	#tag : 'UT extensions'
 }
 
 { #category : 'verification' }

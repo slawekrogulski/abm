@@ -114,7 +114,7 @@ JournalEntry >> note: anObject [
 
 { #category : 'posting' }
 JournalEntry >> post: ledger [
-
+	"self inspect."
 	posted ifTrue: [ ^ self ].
 	ledger debit: drAccount by: amount .
 	ledger credit: crAccount by: amount . 

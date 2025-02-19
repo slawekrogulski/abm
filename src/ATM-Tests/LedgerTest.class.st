@@ -1,46 +1,38 @@
 Class {
 	#name : 'LedgerTest',
-	#superclass : 'TestCase',
-	#category : 'ATM-Tests',
-	#package : 'ATM-Tests'
+	#superclass : 'BaseTest',
+	#category : 'ATM-Tests-tests',
+	#package : 'ATM-Tests',
+	#tag : 'tests'
 }
 
-{ #category : 'running' }
-LedgerTest >> setUp [
-	super setUp.
-	Ledger testStart.
-	"Put here a common initialization logic for tests"
-]
-
-{ #category : 'running' }
-LedgerTest >> tearDown [ 
-	Ledger testStop.
-	super tearDown .
-
+{ #category : 'initialization' }
+LedgerTest >> setUpAccounts [ 
+	"do nothing"
 ]
 
 { #category : 'tests' }
 LedgerTest >> testAddRemoveUserAccount [
 	|owner|
 	owner := 'me'.
-	Ledger add: (UserAccounts newFor: owner).
-	self assert: (Ledger accountsOf: owner) owner equals: owner.
-	self assert: (Ledger balanceOf: owner) equals: 1000000.
-	Ledger remove: owner.
-	self deny: (Ledger exists: owner).
-	self assert: (Ledger list isEmpty).
+	ledger add: (UserAccountsUT newFor: owner).
+	self assert: (ledger accountsOf: owner) owner equals: owner.
+	self assert: (ledger balanceOf: owner) equals: 1000000.
+	ledger remove: owner.
+	self deny: (ledger exists: owner).
+	ledger isEmpty.
 ]
 
 { #category : 'tests' }
 LedgerTest >> testListAccounts [
 	|owner|
 	owner := 'me'.
-	self deny: ((Ledger list) includes: owner).
-	Ledger add: (UserAccounts newFor: owner).
-	self assert: (Ledger list size) equals: 1.
-	self assert: (Ledger exists: owner).
-	Ledger remove: owner.
-	self deny: (Ledger exists: owner).
+	self deny: ((ledger list) includes: owner).
+	ledger add: (UserAccounts newFor: owner).
+	self assert: (ledger list size) equals: 1.
+	self assert: (ledger exists: owner).
+	ledger remove: owner.
+	self deny: (ledger exists: owner).
 	
 	"accounts := Ledger accuontsOf: owner.
 	self assert: accounts owner equals: owner.

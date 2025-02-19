@@ -6,8 +6,9 @@ Trait {
 	#instVars : [
 		'tester'
 	],
-	#category : 'ATM-Tests',
-	#package : 'ATM-Tests'
+	#category : 'ATM-Tests-base',
+	#package : 'ATM-Tests',
+	#tag : 'base'
 }
 
 { #category : 'accessing' }

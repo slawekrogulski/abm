@@ -7,11 +7,7 @@ Class {
 	#classInstVars : [
 		'id',
 		'entries',
-		'unposted',
-		'prodId',
-		'prodEntries',
-		'prodUnposted',
-		'underTest'
+		'unposted'
 	],
 	#category : 'ATM-accounts',
 	#package : 'ATM',
@@ -41,14 +37,10 @@ Journal class >> count [
 
 { #category : 'class initialization' }
 Journal class >> initialize [
-	prodId := 0. 
-	prodEntries := OrderedCollection new.
-	prodUnposted := OrderedCollection new.
-	self testStop .
-"	id := prodId.
-	entries := prodEntries .
-	unposted := prodUnposted .
-	underTest := false."
+	id := 0. 
+	entries := OrderedCollection new.
+	unposted := OrderedCollection new.
+
 ]
 
 { #category : 'accessing' }
@@ -67,23 +59,4 @@ Journal class >> post: ledger [
 	[ unposted isNotEmpty ] 
 		whileTrue: [ unposted removeFirst post: ledger ].
 "	entries do: [ :je | je post ]"
-]
-
-{ #category : 'tests' }
-Journal class >> testStart [ 
-	underTest := true.
-	prodId := id.
-	id := 0.
-	entries := OrderedCollection new.
-	unposted := OrderedCollection new.
-	
-]
-
-{ #category : 'tests' }
-Journal class >> testStop [
-	underTest := false.
-	id := prodId .
-	entries := prodEntries .
-	unposted := prodUnposted 
-	
 ]

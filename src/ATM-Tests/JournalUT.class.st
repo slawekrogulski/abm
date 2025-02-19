@@ -5,8 +5,15 @@ Class {
 	#name : 'JournalUT',
 	#superclass : 'Journal',
 	#classTraits : 'Tester',
-	#category : 'ATM-Tests',
-	#package : 'ATM-Tests'
+	#classInstVars : [
+		'prodId',
+		'prodEntries',
+		'prodUnposted',
+		'underTest'
+	],
+	#category : 'ATM-Tests-UT extensions',
+	#package : 'ATM-Tests',
+	#tag : 'UT extensions'
 }
 
 { #category : 'adding' }
@@ -45,6 +52,28 @@ JournalUT class >> nonePostedAfter: anId [
 { #category : 'accessing' }
 JournalUT class >> second [
 	^ entries second
+]
+
+{ #category : 'tests' }
+JournalUT class >> testStart [ 
+	underTest := true.
+	prodId := id.
+	prodEntries := entries.
+	prodUnposted := unposted .
+	self initialize.
+"	id := 0.
+	entries := OrderedCollection new.
+	unposted := OrderedCollection new.
+"
+]
+
+{ #category : 'tests' }
+JournalUT class >> testStop [
+	underTest := false.
+	id := prodId .
+	entries := prodEntries .
+	unposted := prodUnposted 
+	
 ]
 
 { #category : 'accessing' }

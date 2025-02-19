@@ -1,42 +1,16 @@
 Class {
 	#name : 'ApplicationTest',
-	#superclass : 'TestCase',
-	#instVars : [
-		'application',
-		'userA',
-		'userB',
-		'journal'
-	],
-	#category : 'ATM-Tests',
-	#package : 'ATM-Tests'
+	#superclass : 'BaseTest',
+	#category : 'ATM-Tests-tests',
+	#package : 'ATM-Tests',
+	#tag : 'tests'
 }
-
-{ #category : 'running' }
-ApplicationTest >> setUp [
-	super setUp.
-	journal := JournalUT tester: self.
-	application := AtmApplication new journal: journal; journalEntryClass: JournalEntryUT; yourself .
-	Ledger testStart.
-	journal testStart .
-	userA := (UserAccountsUT newFor: 'a') tester: self.
-	userB := (UserAccountsUT newFor: 'b') tester: self.
-	Ledger add: userA .
-	Ledger add: userB .
-]
-
-{ #category : 'running' }
-ApplicationTest >> tearDown [ 
-	Ledger testStop.
-	journal testStop.
-	super tearDown .
-
-]
 
 { #category : 'tests' }
 ApplicationTest >> testDeposit [
 
 	userA deposit: 1 via: application .
-	userA balance: 1000000 cashOnHand: 1000000 cashAtBank: 0.
+	userA balance: 1000000 cashOnHand: 1000000 cashAtBank: 0. 
 	journal entryCountIs: 1.
 	journal nonePosted .
 	

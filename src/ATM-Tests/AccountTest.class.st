@@ -4,16 +4,10 @@ Class {
 	#instVars : [
 		'account'
 	],
-	#category : 'ATM-Tests',
-	#package : 'ATM-Tests'
+	#category : 'ATM-Tests-tests',
+	#package : 'ATM-Tests',
+	#tag : 'tests'
 }
-
-{ #category : 'running' }
-AccountTest >> setUp [
-	super setUp.
-
-
-]
 
 { #category : 'basic tests' }
 AccountTest >> testAccount [
