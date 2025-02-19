@@ -90,18 +90,6 @@ AtmApplication >> initialize [
 	ledger := Ledger.
 ]
 
-{ #category : 'accessing' }
-AtmApplication >> journal: aJournal [
-
-	journal := aJournal
-]
-
-{ #category : 'accessing' }
-AtmApplication >> journalEntryClass: aJournalEntryClass [
-
-	journalEntryClass := aJournalEntryClass
-]
-
 { #category : 'opening' }
 AtmApplication >> openJournal [ 
 	(self new: JournalPresenter) open.
